@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Little Surprise 💌</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at top,#ffdce8,#fff6f9 55%,#ffe9f0);color:#351b26}
+.card{width:min(92vw,520px);padding:34px 26px;text-align:center;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.9);border-radius:28px;box-shadow:0 18px 60px rgba(100,30,60,.16)}
+.heart{font-size:64px;animation:float 2.4s ease-in-out infinite}
+h1{margin:8px 0 10px;font-size:30px}p{line-height:1.6}
+button{border:0;border-radius:999px;padding:13px 25px;margin:8px;font-size:16px;font-weight:700;cursor:pointer;transition:.25s}
+#openBtn,#yes{background:#e94072;color:#fff;box-shadow:0 8px 20px rgba(233,64,114,.25)}
+#no{background:#eee;color:#555}
+.overlay{position:fixed;inset:0;display:grid;place-items:center;padding:20px;background:rgba(35,12,22,.48);z-index:10}
+.modal{width:min(92vw,450px);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;padding:28px 22px;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,.25);animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.modal .emoji{font-size:50px}
+.photo{width:100%;max-height:420px;object-fit:cover;border-radius:18px;margin:6px 0 15px;box-shadow:0 8px 25px rgba(0,0,0,.12)}
+.hidden{display:none!important}.small{font-size:13px;opacity:.65}
+.confetti{position:fixed;top:-20px;font-size:20px;animation:fall 3s linear forwards;pointer-events:none}
+@keyframes pop{from{transform:scale(.55);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<main class="card">
+  <div class="heart">💗</div>
+  <h1>Just one little surprise...</h1>
+  <p>Open it when you have a moment. ❤️</p>
+  <button id="openBtn">Open</button>
+</main>
+
+<!-- FIRST: SORRY MESSAGE — NO PHOTO HERE -->
+<section class="overlay" id="sorryOverlay">
+  <div class="modal">
+    <div class="emoji">🥺💌</div>
+    <h1>I'm Sorry, Shwetuberry</h1>
+    <p>I'm sorry, Shwetuberry. Will you please forgive me? I don't want to hurt you. The last few days have given me a reality check, and there are a few points we need to discuss before marriage.</p>
+    <button id="continueBtn">Okay… ❤️</button>
+  </div>
+</section>
+
+<!-- SECOND: TALK QUESTION -->
+<section class="overlay hidden" id="talkOverlay">
+  <div class="modal">
+    <div class="emoji">🫶</div>
+    <h1>Do you want to talk to me?</h1>
+    <p>I just want us to talk honestly and calmly.</p>
+    <button id="yes">YES ❤️</button>
+    <button id="no">NO</button>
+    <p class="small" id="hint"></p>
+  </div>
+</section>
+
+<!-- PHOTO APPEARS ONLY AFTER YES -->
+<section class="overlay hidden" id="photoOverlay">
+  <div class="modal">
+    <div class="emoji">❤️</div>
+    <h1>Thank you for saying YES.</h1>
+    <img class="photo" src="photo.jpg" alt="Our special memory">
+    <p>I don't want to hurt you. I just want us to talk honestly about the things we need to discuss before marriage. Whenever you're ready, I'm here. ❤️</p>
+    <button onclick="closePhoto()">I'll be here ❤️</button>
+  </div>
+</section>
+
+<script>
+const sorryOverlay=document.getElementById("sorryOverlay");
+const talkOverlay=document.getElementById("talkOverlay");
+const photoOverlay=document.getElementById("photoOverlay");
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const hint=document.getElementById("hint");
+
+document.getElementById("openBtn").onclick=()=>{
+  sorryOverlay.classList.remove("hidden");
+};
+
+document.getElementById("continueBtn").onclick=()=>{
+  sorryOverlay.classList.add("hidden");
+  talkOverlay.classList.remove("hidden");
+};
+
+let noCount=0;
+const hints=[
+  "Are you sure? 🥺",
+  "Maybe give me one chance? 🥹",
+  "Okay… but YES is getting bigger 😭",
+  "You keep choosing NO and YES keeps growing 😂",
+  "One tiny chance? ❤️"
+];
+
+no.onclick=()=>{
+  noCount++;
+  hint.textContent=hints[Math.min(noCount-1,hints.length-1)];
+  yes.style.transform=`scale(${Math.min(1+noCount*.28,3.1)})`;
+  no.style.position="relative";
+  no.style.left=`${Math.round(Math.random()*160-80)}px`;
+  no.style.top=`${Math.round(Math.random()*100-50)}px`;
+};
+
+yes.onclick=()=>{
+  talkOverlay.classList.add("hidden");
+  photoOverlay.classList.remove("hidden");
+  burst();
+};
+
+function closePhoto(){photoOverlay.classList.add("hidden")}
+
+function burst(){
+  const symbols=["💗","❤️","💕","✨","🌸","💌"];
+  for(let i=0;i<35;i++){
+    const e=document.createElement("span");
+    e.className="confetti";
+    e.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+    e.style.left=Math.random()*100+"vw";
+    e.style.animationDelay=Math.random()*.8+"s";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3800);
+  }
+}
+</script>
+</body>
+</html>
